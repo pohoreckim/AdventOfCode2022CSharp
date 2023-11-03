@@ -1,6 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-using System.Collections;
-using Utils;
+﻿using Utils;
 
 // Task input
 string input = InputLoader.LoadInput();
@@ -16,5 +14,5 @@ Console.WriteLine($"Max value: {maxValue}");
 // Part Two
 int threeMaxValues = sums.OrderByDescending(x => x).Take(3).Sum();  
 
-Console.WriteLine(threeMaxValues.ToString());
+Console.WriteLine($"Sum of three highest values: {threeMaxValues}");
 
