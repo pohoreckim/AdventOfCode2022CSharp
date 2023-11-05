@@ -28,7 +28,7 @@ Func<string, int> stringToPriority = (string s) =>
 
 var sum = input.Split('\n').SkipLast(1).Select(x => findDuplicates(x.Substring(0, x.Length / 2), x.Substring(x.Length /2))).Select(x => stringToPriority(x)).Sum();
 
-Console.WriteLine(sum);
+Console.WriteLine($"Part One answer: {sum}");
 
 // Part Two
 
@@ -49,4 +49,4 @@ input.Split('\n').SkipLast(1).Aggregate((s1, s2) =>
 
 sum = results.Select(x => stringToPriority(x)).Sum();
 
-Console.WriteLine(sum);
+Console.WriteLine($"Part One answer: {sum}");
