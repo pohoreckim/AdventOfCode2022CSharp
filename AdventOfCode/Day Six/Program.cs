@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Security.Cryptography.X509Certificates;
-using Utils;
+﻿using Utils;
 
 // Task input
 string input = InputLoader.LoadInput();
