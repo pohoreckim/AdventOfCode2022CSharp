@@ -1,5 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using Utils;
+﻿using Utils;
 
 // Task input
 string input = InputLoader.LoadInput();
