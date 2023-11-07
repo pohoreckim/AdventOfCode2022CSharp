@@ -133,22 +133,8 @@ var aspiringTrees = forest.Trees.Where((x) => x.row > 0 && x.row < rows - 1 && x
 
 foreach (var tree in aspiringTrees)
 {
-    int ll = lookLeft(tree);
-    int lr = lookRight(tree);
-    int lu = lookUp(tree);
-    int ld = lookDown(tree);
     int score = lookLeft(tree) * lookRight(tree) * lookUp(tree) * lookDown(tree);
-    if (score == 648508)
-    {
-        int k = 0;
-    }
     result = score > result ? score : result;
 }
-
-//int maxVal = forest.Trees.Max(x => x.value);
-//var highest = forest.Trees.Where(x => x.value == 9).ToList();
-
-//var line = forest.GetEnumerable(85, Direction.RIGHT).ToList().Select(x => x.Item2).Aggregate("", (x, y) => x + y.ToString());
-//line = forest.GetEnumerable(46, Direction.DOWN).ToList().Select(x => x.Item2).Aggregate("", (x, y) => x + y.ToString());
 
 Console.WriteLine($"Part Two answear: {result}");
