@@ -25,7 +25,7 @@ namespace Day_Eight
         public IEnumerator<(int, int, int)> GetEnumerator(int index, Direction direction)
         {
             var treeLine = (direction == Direction.UP || direction == Direction.DOWN) ? Trees.Where((x) => x.column == index) : Trees.Where((x) => x.row == index);
-            treeLine = (direction == Direction.UP || direction == Direction.RIGHT) ? treeLine.Reverse() : treeLine;
+            treeLine = (direction == Direction.UP || direction == Direction.LEFT) ? treeLine.Reverse() : treeLine;
             return new ForestEnum(treeLine.Select((x) => x.value).ToArray(), index);
         }
         public IEnumerable<(int, int, int)> GetEnumerable(int index, Direction direction)

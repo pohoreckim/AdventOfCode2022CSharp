@@ -47,24 +47,108 @@ for (int i = 0; i < cols; i++)
 }
 for (int i = 0; i < rows; i++)
 {
-    forest.GetEnumerable(i, Direction.LEFT).ToList().Aggregate(-1, checkRow);
-    forest.GetEnumerable(i, Direction.RIGHT).ToList().Select(x => (rows - 1 - x.Item1, x.Item2, x.Item3)).Aggregate(-1, checkRow);
+    forest.GetEnumerable(i, Direction.RIGHT).ToList().Aggregate(-1, checkRow);
+    forest.GetEnumerable(i, Direction.LEFT).ToList().Select(x => (rows - 1 - x.Item1, x.Item2, x.Item3)).Aggregate(-1, checkRow);
 }
-
-//foreach (var x in forest.GetEnumerable(0, Direction.LEFT))
-//{
-//    Console.WriteLine($"X: {x.Item3}, Y: {x.Item1}, Height: {x.Item2}");
-//}
-
-//foreach (var x in forest.GetEnumerable(1, Direction.UP))
-//{
-//    Console.WriteLine($"X: {x.Item1}, Y: {x.Item3}, Height: {x.Item2}");
-//}
 
 int result = visibleTrees.Cast<bool>().ToList().Where(x => x).Count();
 Console.WriteLine($"Part One answear: {result}");
 
 // Part Two
 
+Func<(int row, int col, int val), int> lookLeft = (tree) =>
+{
+    int dist = 0;
+    try
+    {
+        var firstToLeft = forest.Trees
+            .Where((x) => x.row == tree.row && x.column < tree.col)
+            .OrderByDescending(x => x.column)
+            .First(x => x.value >= tree.val);
+        dist = tree.col - firstToLeft.column;
+    }
+    catch (InvalidOperationException)
+    {
+        dist = tree.col;
+    }
+    return dist;
+};
+
+Func<(int row, int col, int val), int> lookRight = (tree) =>
+{
+    int dist = 0;
+    try
+    {
+        var firstToRight = forest.Trees
+            .Where((x) => x.row == tree.row && x.column > tree.col)
+            .OrderBy(x => x.column)
+            .First(x => x.value >= tree.val);
+        dist = firstToRight.column - tree.col;
+    }
+    catch (InvalidOperationException)
+    {
+        dist = cols - tree.col - 1;
+    }
+    return dist;
+};
+
+Func<(int row, int col, int val), int> lookUp = (tree) =>
+{
+    int dist = 0;
+    try
+    {
+        var firstToLeft = forest.Trees
+            .Where((x) => x.row < tree.row && x.column == tree.col)
+            .OrderByDescending(x => x.row)
+            .First(x => x.value >= tree.val);
+        dist = tree.row - firstToLeft.row;
+    }
+    catch (InvalidOperationException)
+    {
+        dist = tree.row;
+    }
+    return dist;
+};
+
+Func<(int row, int col, int val), int> lookDown = (tree) =>
+{
+    int dist = 0;
+    try
+    {
+        var firstToLeft = forest.Trees
+            .Where((x) => x.row > tree.row && x.column == tree.col)
+            .OrderBy(x => x.row)
+            .First(x => x.value >= tree.val);
+        dist = firstToLeft.row - tree.row;
+    }
+    catch (InvalidOperationException)
+    {
+        dist = rows - tree.row - 1;
+    }
+    return dist;
+};
+
+result = 0;
+var aspiringTrees = forest.Trees.Where((x) => x.row > 0 && x.row < rows - 1 && x.column > 0 && x.column < cols - 1);
+
+foreach (var tree in aspiringTrees)
+{
+    int ll = lookLeft(tree);
+    int lr = lookRight(tree);
+    int lu = lookUp(tree);
+    int ld = lookDown(tree);
+    int score = lookLeft(tree) * lookRight(tree) * lookUp(tree) * lookDown(tree);
+    if (score == 648508)
+    {
+        int k = 0;
+    }
+    result = score > result ? score : result;
+}
+
+//int maxVal = forest.Trees.Max(x => x.value);
+//var highest = forest.Trees.Where(x => x.value == 9).ToList();
+
+//var line = forest.GetEnumerable(85, Direction.RIGHT).ToList().Select(x => x.Item2).Aggregate("", (x, y) => x + y.ToString());
+//line = forest.GetEnumerable(46, Direction.DOWN).ToList().Select(x => x.Item2).Aggregate("", (x, y) => x + y.ToString());
 
 Console.WriteLine($"Part Two answear: {result}");
