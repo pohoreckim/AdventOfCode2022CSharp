@@ -11,14 +11,8 @@ namespace Day_Seven
         public string Name { get; }
         public List<Dir> Subdirectories { get; set; }
         public List<(string name, int size)> Files { get; set; }
-        public Dir ParentDir { get; }
-        public Dir(string name, Dir parentDir)
-        {
-            Subdirectories = new List<Dir>();
-            Files = new List<(string, int)>();
-            Name = name;
-            ParentDir = parentDir;
-        }
+        public Dir? ParentDir { get; }
+        public Dir(string name, Dir parentDir) : this(name, new List<Dir>(), new List<(string, int)>(), parentDir) { }
         public Dir(string name, List<Dir> subdirectories, List<(string, int)> files, Dir parentDir)
         {
             Subdirectories = subdirectories;

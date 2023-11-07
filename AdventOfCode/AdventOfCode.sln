@@ -11,13 +11,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day Two", "Day Two\Day Two.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day Three", "Day Three\Day Three.csproj", "{A901D67A-5238-401E-BE34-AEBDBF9F31E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Day Four", "Day Four\Day Four.csproj", "{FC7ACDDC-EE78-4A3A-AD2C-DC7F9A0EEF74}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day Four", "Day Four\Day Four.csproj", "{FC7ACDDC-EE78-4A3A-AD2C-DC7F9A0EEF74}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Day Five", "Day Five\Day Five.csproj", "{111D00DD-D4F1-45C8-8519-A0D7911FA684}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day Five", "Day Five\Day Five.csproj", "{111D00DD-D4F1-45C8-8519-A0D7911FA684}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Day Six", "Day Six\Day Six.csproj", "{9C85DBD0-4FE2-4430-86D3-5339F0BB6810}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day Six", "Day Six\Day Six.csproj", "{9C85DBD0-4FE2-4430-86D3-5339F0BB6810}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Day Seven", "Day Seven\Day Seven.csproj", "{4612F446-6343-48CC-9D8B-8331C681A118}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day Seven", "Day Seven\Day Seven.csproj", "{4612F446-6343-48CC-9D8B-8331C681A118}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Day Eight", "Day Eight\Day Eight.csproj", "{EEA3C1C3-4ED4-48FF-99F0-25B5819CD866}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{4612F446-6343-48CC-9D8B-8331C681A118}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4612F446-6343-48CC-9D8B-8331C681A118}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4612F446-6343-48CC-9D8B-8331C681A118}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEA3C1C3-4ED4-48FF-99F0-25B5819CD866}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEA3C1C3-4ED4-48FF-99F0-25B5819CD866}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEA3C1C3-4ED4-48FF-99F0-25B5819CD866}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEA3C1C3-4ED4-48FF-99F0-25B5819CD866}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
