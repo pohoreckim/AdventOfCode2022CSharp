@@ -1,7 +1,5 @@
 ﻿using Utils;
 using Day_Eight;
-using System.Net.Http.Headers;
-using System.Collections.Generic;
 
 // Task input
 string input = InputLoader.LoadInput();
