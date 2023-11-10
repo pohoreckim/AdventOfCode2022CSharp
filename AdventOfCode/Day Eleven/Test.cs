@@ -8,16 +8,16 @@ namespace Day_Eleven
 {
     internal class Test
     {
-        private int _divisor;
+        private ulong _divisor;
         private int _ifTrue;
         private int _ifFalse;
-        public Test(int divisor, int ifTrue, int ifFalse)
+        public Test(ulong divisor, int ifTrue, int ifFalse)
         {
             _divisor = divisor;
             _ifTrue = ifTrue;
             _ifFalse = ifFalse;
         }
-        public int RunTest(int value)
+        public int RunTest(ulong value)
         {
             return (value % _divisor) == 0 ? _ifTrue : _ifFalse;
         }

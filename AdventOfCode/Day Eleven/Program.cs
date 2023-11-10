@@ -6,9 +6,9 @@ using Utils;
 string input = InputLoader.LoadInput();
 var monkeyDesc = input.Split("\n\n");
 
-Func<int, int> functionFactory(string operation, string a)
+Func<ulong, ulong> functionFactory(string operation, string a)
 {
-    if (int.TryParse(a, out int argument))
+    if (ulong.TryParse(a, out ulong argument))
     {
         switch (operation)
         {
@@ -46,12 +46,12 @@ Monkey[] loadPuzzle(string[] monkeyDesc)
     foreach (var monekyInput in monkeyDesc)
     {
         var lines = monekyInput.Split("\n");
-        List<int> items = lines[1].Replace(',', ' ').Split(' ').Where(x => int.TryParse(x, out _)).Select(x => int.Parse(x)).ToList();
+        List<ulong> items = lines[1].Replace(',', ' ').Split(' ').Where(x => ulong.TryParse(x, out _)).Select(x => ulong.Parse(x)).ToList();
         var operationTokens = lines[2].Split(' ');
-        var testDivisor = lines[3].Split(' ').Where(x => int.TryParse(x, out _)).Select(x => int.Parse(x)).ToArray()[0];
+        var testDivisor = lines[3].Split(' ').Where(x => ulong.TryParse(x, out _)).Select(x => ulong.Parse(x)).ToArray()[0];
         var ifTrue = lines[4].Split(' ').Where(x => int.TryParse(x, out _)).Select(x => int.Parse(x)).ToArray()[0];
         var ifFalse = lines[5].Split(' ').Where((x) => int.TryParse(x, out _)).Select(x => int.Parse(x)).ToArray()[0];
-        monkeys[id++] = new Monkey(new Queue<int>(items), new Test(testDivisor, ifTrue, ifFalse), functionFactory(operationTokens[6], operationTokens[7]));
+        monkeys[id++] = new Monkey(new Queue<ulong>(items), new Test(testDivisor, ifTrue, ifFalse), functionFactory(operationTokens[6], operationTokens[7]));
     }
     return monkeys;
 }
@@ -68,9 +68,16 @@ for (int i = 0; i < roundsCount; i++)
     {
         while (monkeys[j].HasItems())
         {
-            (int item, int nextMonkey) = monkeys[j].InspectNextItem();
-            monkeys[nextMonkey].CatchItem(item);
-            monkeyInspCount[j]++;
+            try
+            {
+                (ulong item, int nextMonkey) = monkeys[j].InspectNextItem();
+                monkeys[nextMonkey].CatchItem(item);
+                monkeyInspCount[j]++;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }
@@ -92,9 +99,15 @@ for (int i = 0; i < roundsCount; i++)
     {
         while (monkeys[j].HasItems())
         {
-            (int item, int nextMonkey) = monkeys[j].InspectNextItem(true);
-            monkeys[nextMonkey].CatchItem(item);
-            monkeyInspCount[j]++;
+            try
+            {
+                (ulong item, int nextMonkey) = monkeys[j].InspectNextItem(true);
+                monkeys[nextMonkey].CatchItem(item);
+                monkeyInspCount[j]++;
+            }
+            catch (Exception ex) {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }

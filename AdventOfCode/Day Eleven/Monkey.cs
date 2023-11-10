@@ -8,16 +8,16 @@ namespace Day_Eleven
 {
     internal class Monkey
     {
-        public Queue<int> Items { get; }
+        public Queue<ulong> Items { get; }
         public Test Test { get; }
-        public Func<int, int> Operation { get; }
-        public Monkey(Queue<int> items, Test test, Func<int, int> operation)
+        public Func<ulong, ulong> Operation { get; }
+        public Monkey(Queue<ulong> items, Test test, Func<ulong, ulong> operation)
         {
             Items = items;
             Test = test;
             Operation = operation;
         }
-        public void CatchItem(int item)
+        public void CatchItem(ulong item)
         {
             Items.Enqueue(item);
         }
@@ -25,10 +25,10 @@ namespace Day_Eleven
         {
             return Items.Count > 0;
         }
-        public (int, int) InspectNextItem(bool ridiculousness = false)
+        public (ulong, int) InspectNextItem(bool ridiculousness = false)
         {
-            int worryLevel = Operation(Items.Dequeue());
-            worryLevel /= ridiculousness ? 1 : 3;
+            ulong worryLevel = Operation(Items.Dequeue());
+            worryLevel /= ridiculousness ? 1UL : 3UL;
             int testResult = Test.RunTest(worryLevel);
             return (worryLevel, testResult);
         }
