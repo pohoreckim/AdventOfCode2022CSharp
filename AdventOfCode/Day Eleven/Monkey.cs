@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,27 +9,27 @@ namespace Day_Eleven
 {
     internal class Monkey
     {
-        public Queue<ulong> Items { get; }
+        private Queue<ulong> _items;
+        private Func<ulong, ulong> _operation;
         public Test Test { get; }
-        public Func<ulong, ulong> Operation { get; }
         public Monkey(Queue<ulong> items, Test test, Func<ulong, ulong> operation)
         {
-            Items = items;
+            _items = items;
             Test = test;
-            Operation = operation;
+            _operation = operation;
         }
         public void CatchItem(ulong item)
         {
-            Items.Enqueue(item);
+            _items.Enqueue(item);
         }
         public bool HasItems()
         {
-            return Items.Count > 0;
+            return _items.Count > 0;
         }
-        public (ulong, int) InspectNextItem(bool ridiculousness = false)
+        public (ulong, int) InspectNextItem(ulong divider, bool moduloDivide = false)
         {
-            ulong worryLevel = Operation(Items.Dequeue());
-            worryLevel /= ridiculousness ? 1UL : 3UL;
+            ulong worryLevel = _operation(_items.Dequeue());
+            worryLevel = moduloDivide ? worryLevel % divider : worryLevel / divider;
             int testResult = Test.RunTest(worryLevel);
             return (worryLevel, testResult);
         }

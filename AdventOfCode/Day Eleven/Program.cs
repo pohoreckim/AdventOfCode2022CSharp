@@ -1,4 +1,5 @@
 ﻿using Day_Eleven;
+using System.Numerics;
 using Utils;
 
 
@@ -70,7 +71,7 @@ for (int i = 0; i < roundsCount; i++)
         {
             try
             {
-                (ulong item, int nextMonkey) = monkeys[j].InspectNextItem();
+                (ulong item, int nextMonkey) = monkeys[j].InspectNextItem(3);
                 monkeys[nextMonkey].CatchItem(item);
                 monkeyInspCount[j]++;
             }
@@ -93,15 +94,23 @@ monkeys = loadPuzzle(monkeyDesc);
 monkeyInspCount = new long[monkeys.Length];
 roundsCount = 10_000;
 
+//mod_all = 1
+//    for div_by in [m["div_by"] for m in monkeys.values()]:
+//        mod_all *= div_by
+
+ulong moduloAll = 1UL;
+moduloAll = monkeys.Aggregate(moduloAll, (x, y) => x *= y.Test.GetDivisor());
+
 for (int i = 0; i < roundsCount; i++)
 {
+    Console.WriteLine(i);
     for (int j = 0; j < monkeys.Length; j++)
     {
         while (monkeys[j].HasItems())
         {
             try
             {
-                (ulong item, int nextMonkey) = monkeys[j].InspectNextItem(true);
+                (ulong item, int nextMonkey) = monkeys[j].InspectNextItem(moduloAll, true);
                 monkeys[nextMonkey].CatchItem(item);
                 monkeyInspCount[j]++;
             }

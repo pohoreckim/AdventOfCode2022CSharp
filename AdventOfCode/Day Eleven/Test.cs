@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,5 +22,6 @@ namespace Day_Eleven
         {
             return (value % _divisor) == 0 ? _ifTrue : _ifFalse;
         }
+        public ulong GetDivisor() { return _divisor; }
     }
 }
