@@ -12,6 +12,7 @@ namespace Day_Twelve
         public int X { get; private set; }
         public int Y { get; private set; }
         public int G { get; set; }
+        public int Height { get {  return _map[X, Y]; } }
         public Node? Parent { get; set; }
         public Node((int x, int y) p) : this(p.x, p.y) { }
         public Node(int x, int y)

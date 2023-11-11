@@ -83,20 +83,28 @@ Console.WriteLine($"Part One answer: {result}");
 
 // Part Two
 
-List<Node> path = new List<Node>();
+List<Node> aspiringNodes = new List<Node>();
 
-Node current = end;
-while (!current.Equals(start)) 
+for (int i = 0; i < height; i++)
 {
-	path.Add(current);
-	current = current.Parent;
+	for (int k = 0; k < width; k++)
+	{
+		if (map[i,k] == 0)
+		{
+			Node candidate = new Node(i, k);
+			var neighbours = candidate.GetNeighbours();
+			if( neighbours.Any(x => x.Height == candidate.Height + 1) )	
+				aspiringNodes.Add( candidate );
+		}
+	}
 }
-path.Add(current);
-path.Reverse();
 
-var newStart = path.Where(x => map[x.X, x.Y] == 0);
-var heights = path.Select(x => map[x.X, x.Y]).ToList();
-
+List<int> distances = new List<int>();
+foreach (Node node in aspiringNodes)
+{
+	distances.Add(AStart(node, end));
+}
+result = distances.Min();
 
 Console.WriteLine($"Part Two answer: {result}");
 
