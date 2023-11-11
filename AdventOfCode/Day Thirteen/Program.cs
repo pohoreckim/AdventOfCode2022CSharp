@@ -101,4 +101,26 @@ Console.WriteLine($"Part One answer: {result}");
 
 // Part Two
 
+List<List<object>> allPackets = new List<List<object>>();
+string divPacketOne = "[[2]]";
+string divPacketTwo = "[[6]]";
+(List<object> div1, List<object> div2) = (parseToken(ref divPacketOne), parseToken(ref divPacketTwo));
+allPackets.Add(div1);
+allPackets.Add(div2);
+
+foreach (var packet in packets)
+{
+    allPackets.Add(packet.p1);
+    allPackets.Add(packet.p2);
+}
+
+int Comp(object left, object right)
+{
+    return Compare(right, left);
+}
+
+allPackets.Sort(Comp);
+
+result = (allPackets.IndexOf(div1) + 1) * (allPackets.IndexOf(div2) + 1);
+
 Console.WriteLine($"Part Two answer: {result}");
