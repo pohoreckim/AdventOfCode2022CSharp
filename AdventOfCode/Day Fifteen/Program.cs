@@ -1,4 +1,5 @@
-﻿using Utils;
+﻿using Day_Fifteen;
+using Utils;
 
 // Task input
 
@@ -20,11 +21,6 @@ Func<(int x, int y), (int x, int y), int> manhatanDistance = (p1, p2) =>
 };
 
 // Part One
-
-bool IsInRange(int x, int from, int to)
-{
-    return (x >= from && x <= to);
-}
 
 HashSet<int> checkRow(List<((int x, int y) sensor, (int x, int y) beacon)> objects, int goalRow)
 {
@@ -51,41 +47,55 @@ HashSet<int> checkRow(List<((int x, int y) sensor, (int x, int y) beacon)> objec
 
 int goalRow = 2_000_000;
 HashSet<int> goal = checkRow(objects, goalRow);
+
+
 int beaconsInRange = objects.Where(x => x.beacon.y == goalRow).Select(x => x.beacon).Distinct().Count();
 int result = goal.Count() - beaconsInRange;
 Console.WriteLine($"Part One answer: {result}");
 
 // Part Two
 
-List<((int x, int y) sensor, int range)> sensors = new List<((int, int), int)>();
-List<(int x, int y)> beacons = new List<(int x, int y)>();
+List<LinearFunction> increasingFunctions = new List<LinearFunction>();
+List<LinearFunction> decresingFunctions = new List<LinearFunction>();
 
 foreach (var obj in objects)
 {
-    sensors.Add((obj.sensor, manhatanDistance(obj.sensor, obj.beacon)));
-    beacons.Add(obj.beacon);
+    int dist = manhatanDistance(obj.sensor, obj.beacon) + 1;
+    increasingFunctions.Add(new LinearFunction(1, obj.sensor.y - obj.sensor.x + dist));
+    increasingFunctions.Add(new LinearFunction(1, obj.sensor.y - obj.sensor.x - dist));
+    decresingFunctions.Add(new LinearFunction(-1, obj.sensor.y + obj.sensor.x + dist));
+    decresingFunctions.Add(new LinearFunction(-1, obj.sensor.y + obj.sensor.x - dist));
 }
 
-int upperBound = 4_000_000;
-List<(int, int)> possiblePoints = new List<(int, int)>();
-for (int i = 0; i < upperBound; i++)
-{
-    for (int j = 0; j < upperBound; j++)
-    {
-        bool addFlag = true;
-        foreach (var s in sensors)
-        {
-            if(s.sensor.x == i && s.sensor.y == j) { addFlag = false; break; }
-            if(manhatanDistance((i, j), s.sensor) <= s.range) { addFlag = false; break; }
-        }
-        foreach (var b in beacons)
-        {
-            if(b.x == i && b.y == j) { addFlag = false; break; }
-        }
-        if (addFlag)
-            possiblePoints.Add((i, j));
+List<(int x, int y)> aspiringPoints = new List<(int x, int y)>();
 
+foreach (var iFun in increasingFunctions)
+{
+    foreach (var dFun in decresingFunctions)
+    {
+        aspiringPoints.Add(LinearFunction.FindIntersection(iFun, dFun));
     }
 }
 
-Console.WriteLine($"Part Two answer: {result}");
+int lowerBound = 0;
+int upperBound = 4_000_000;
+aspiringPoints = aspiringPoints.Where(p => p.x >= lowerBound && p.x <= upperBound && p.y >= lowerBound && p.y <= upperBound).ToList();
+
+for (int i = aspiringPoints.Count - 1; i >= 0; i--)
+{
+    foreach (var obj in objects)
+    {
+        if (manhatanDistance(aspiringPoints[i], obj.sensor) <= manhatanDistance(obj.sensor, obj.beacon))
+        {
+            aspiringPoints.RemoveAt(i); 
+            break;
+        }
+    }
+}
+
+aspiringPoints = aspiringPoints.Distinct().ToList();
+
+
+long frequency = (long)aspiringPoints[0].x * (long)upperBound + (long)aspiringPoints[0].y;
+
+Console.WriteLine($"Part Two answer: {frequency}");
