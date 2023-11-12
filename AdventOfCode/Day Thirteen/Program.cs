@@ -1,5 +1,6 @@
 ﻿using Utils;
 
+// Task input
 bool nextChar(ref string s, out char c)
 {
     c = (char)0;
@@ -11,8 +12,6 @@ bool nextChar(ref string s, out char c)
     }
     return true;
 }
-
-// Task input
 List<object> parseToken(ref string input)
 {
     string buffor = string.Empty;
@@ -102,8 +101,7 @@ Console.WriteLine($"Part One answer: {result}");
 // Part Two
 
 List<List<object>> allPackets = new List<List<object>>();
-string divPacketOne = "[[2]]";
-string divPacketTwo = "[[6]]";
+(string divPacketOne, string divPacketTwo) = ("[[2]]", "[[6]]");
 (List<object> div1, List<object> div2) = (parseToken(ref divPacketOne), parseToken(ref divPacketTwo));
 allPackets.Add(div1);
 allPackets.Add(div2);
