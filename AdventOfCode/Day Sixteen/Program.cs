@@ -16,9 +16,6 @@ foreach (var line in input.Split('\n').SkipLast(1))
 
 string startVertex = "AA";
 List<(string name, int rate, List<(string, int)> neighbours)> compactVerList = new List<(string name, int rate, List<(string, int)> neighbours)>();
-//{
-//    (startVertex, 0, vertexList.Find(x => x.name == startVertex).neighbours.Select(x => (x, 1)).ToList())
-//};
 
 foreach (var vertex in vertexList)
 {
@@ -38,14 +35,6 @@ foreach (var vertex in vertexList)
             foreach (var neighbour in current.neighbours)
             {
                 if (closed.Contains(neighbour)) continue;
-                //if(neighbours.Any(x => x.name == neighbour))
-                //{
-                //    var toUpdate = neighbours.Find(x => x.name == neighbour);
-                //    if (toUpdate.dist > open[0].level + 1)
-                //    {
-                //        toUpdate.dist = open[0].level + 1;
-                //    }
-                //}
                 else if (neighbour != vertex.name)
                 {
                     open.Add((neighbour, open[0].level + 1));
@@ -60,11 +49,10 @@ foreach (var vertex in vertexList)
 
 // Part One
 
+DecisionTree tree = new DecisionTree(compactVerList, "AA", 30);
 
-DecisionTree tree = new DecisionTree(compactVerList, "AA", 10);
-double average = compactVerList.Select(x => x.neighbours.Count).Average() + 1;
 
-int result = 0;
+int result = tree.LeafValues.Max();
 Console.WriteLine($"Part One answer: {result}");
 
 // Part Two
