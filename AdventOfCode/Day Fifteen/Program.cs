@@ -95,7 +95,6 @@ for (int i = aspiringPoints.Count - 1; i >= 0; i--)
 
 aspiringPoints = aspiringPoints.Distinct().ToList();
 
-
-long frequency = (long)aspiringPoints[0].x * (long)upperBound + (long)aspiringPoints[0].y;
+long frequency = aspiringPoints[0].x * (long)upperBound + aspiringPoints[0].y;
 
 Console.WriteLine($"Part Two answer: {frequency}");
