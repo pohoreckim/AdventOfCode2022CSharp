@@ -12,15 +12,17 @@ namespace Day_Sixteen
         private string _rootNodeName;
         public int MaxHeight { get; private set; }
         public Node? Root { get; private set; }
-        public List<int> LeafValues { get; private set; }
+        public int BestLeafValue { get; private set; }
+        public List<string> BestPath { get; private set; }
         public DecisionTree(List<(string, int, List<(string, int)>)> vertexList, string rootNodeName, int maxHeight)
         {
             _vertexList = vertexList;
             _rootNodeName = rootNodeName;
             MaxHeight = maxHeight;
+            BestLeafValue = int.MinValue;
+            BestPath = new List<string>();
             Root = CreateTree();
-            LeafValues = new List<int>();
-            CalculateLeafValues(Root, 0);
+            CalculateLeafValues(Root, 0, new List<string>());
         }
         private Node CreateTree()
         {
@@ -96,20 +98,26 @@ namespace Day_Sixteen
             }
             return dists;
         }
-        private void CalculateLeafValues(Node n, int cumulativeValue)
+        private void CalculateLeafValues(Node n, int cumulativeValue, List<string> path)
         {
             cumulativeValue += n.Value;
+            path.Add(n.Name);
             if (n.Level == 0 || n.Children.Count == 0)
             {
-                LeafValues.Add(cumulativeValue);
+                if(cumulativeValue > BestLeafValue)
+                {
+                    BestLeafValue = cumulativeValue;
+                    BestPath = path;
+                }
             }
             else
             {
                 foreach (var child in n.Children)
                 {
-                    CalculateLeafValues(child, cumulativeValue);
+                    CalculateLeafValues(child, cumulativeValue, path.Select(x => new string(x)).ToList());
                 }
             }
         }
+        
     }
 }
