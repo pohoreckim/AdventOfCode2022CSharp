@@ -1,5 +1,4 @@
 ﻿using Day_Sixteen;
-using System.Collections.Generic;
 using Utils;
 
 // Task input
@@ -114,4 +113,4 @@ foreach (var p in paths)
     result = sum > result ? sum : result;
 }
 
-Console.WriteLine($"Part One answer: {result}");
+Console.WriteLine($"Part Two answer: {result}");
