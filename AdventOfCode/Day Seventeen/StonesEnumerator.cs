@@ -12,6 +12,8 @@ namespace Day_Seventeen
         }
         public Stone Current => new Stone(_stoneShapes[position]);
 
+        public int Position { get => position; }
+
         object IEnumerator.Current => Current;
 
         public void Dispose() { }

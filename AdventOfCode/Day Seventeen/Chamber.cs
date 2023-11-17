@@ -10,17 +10,18 @@ namespace Day_Seventeen
     {
         private int _chamberWidth;
         private List<char[]> _chamber;
-        public int Height { get; private set; }
+        public ulong Height { get { return (ulong)_pileHeight + _levelsPruned; }}
         private int _pileHeight;
-        private int _levelsPruned;
+        private ulong _levelsPruned;
+        private int _heightBuffor;
         private (int, int) SpawnPoint { get {  return (2, _pileHeight + 3); } }
 
-        public Chamber(int chamberWidth, int startHeight)
+        public Chamber(int chamberWidth, int heightBuffor)
         {
             _chamberWidth = chamberWidth;
             _chamber = new List<char[]>();
-            Height = startHeight;
-            AddSpace(Height);
+            _heightBuffor = heightBuffor;
+            AddSpace(heightBuffor);
             _levelsPruned = 0;
             _pileHeight = 0;
         }
@@ -31,18 +32,18 @@ namespace Day_Seventeen
                 _chamber.Add(Enumerable.Repeat(Globals.air, _chamberWidth).ToArray());
             }
         }
-        public void Simulation(StonesEnumerator stones, HotGasEnumerator hotGas, int stonesCount) 
+        public void Simulation(StonesEnumerator stones, HotGasEnumerator hotGas, ulong stonesCount, bool prune=true) 
         {
-            for (int i = 0; i < stonesCount; i++)
+            for (ulong i = 0; i < stonesCount; i++)
             {
                 stones.MoveNext();
                 hotGas.MoveNext();
                 Stone currentStone = stones.Current;
                 currentStone.Move(SpawnPoint);
-                (int x, int y) direction = hotGas.Current == '<' ? (-1, 0) : (1, 0);
                 while (true)
                 {
-                    if(CanMove(currentStone, direction))
+                    (int x, int y) direction = hotGas.Current == '<' ? (-1, 0) : (1, 0);
+                    if (CanMove(currentStone, direction))
                     {
                         currentStone.Move(direction);
                     }
@@ -51,16 +52,40 @@ namespace Day_Seventeen
                     {
                         currentStone.Move(direction);
                         hotGas.MoveNext();
-                        direction = hotGas.Current == '<' ? (-1, 0) : (1, 0);
                     }
                     else break;
                 }
                 AddStone(currentStone);
-                //Draw();
                 _pileHeight = Math.Max(currentStone.Y + currentStone.Height, _pileHeight);
-                int spaceNeed = 10 - (_chamber.Count - _pileHeight);
+                int spaceNeed = _heightBuffor - (_chamber.Count - _pileHeight);
                 if (spaceNeed > 0) AddSpace(spaceNeed);
+                if (prune)
+                {
+                    int pruneLevel = GetFullLevel(currentStone);
+                    if (pruneLevel > 0)
+                    {
+                        Prune(pruneLevel);
+                    }
+                }
             }
+        }
+        private bool CheckLevel(int level)
+        {
+            return _chamber[level].All(x => x == Globals.rock);
+        }
+        private int GetFullLevel(Stone stone)
+        {
+            for (int i = stone.Y + stone.Height - 1; i >= stone.Y; i--)
+            {
+                if(CheckLevel(i)) return i;
+            }
+            return -1;
+        }
+        private void Prune(int level)
+        {
+            _chamber = _chamber.Skip(level + 1).ToList();
+            _levelsPruned += (ulong)level + 1;
+            _pileHeight -= level + 1;
         }
         private void AddStone(Stone stone)
         {
@@ -87,6 +112,15 @@ namespace Day_Seventeen
                 if(x < 0 || y < 0 || x >= _chamberWidth || _chamber[y][x] != Globals.air)   return false;
             }
             return true;   
+        }
+        public List<int> FullLevels()
+        {
+            List<int> levels = new List<int>();
+            for (int i = 0; i < _chamber.Count; i++)
+            {
+                if (_chamber[i].All(x => x == Globals.rock)) levels.Add(i);
+            }
+            return levels;
         }
     }
 }
