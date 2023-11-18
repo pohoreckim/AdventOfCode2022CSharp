@@ -32,14 +32,11 @@ HashSet<int> checkRow(List<((int x, int y) sensor, (int x, int y) beacon)> objec
         {
             var d = Math.Abs(pair.sensor.y - goalRow);
             int length = 2 * dist + 1 - d * 2;
-            int startPos = pair.sensor.x - dist + d;
-
-            
+            int startPos = pair.sensor.x - dist + d;   
                 foreach (var x in Enumerable.Range(startPos, length))
                 {
                     goal.Add(x);
-                }
-            
+                }   
         }
     }
     return goal;
@@ -47,7 +44,6 @@ HashSet<int> checkRow(List<((int x, int y) sensor, (int x, int y) beacon)> objec
 
 int goalRow = 2_000_000;
 HashSet<int> goal = checkRow(objects, goalRow);
-
 
 int beaconsInRange = objects.Where(x => x.beacon.y == goalRow).Select(x => x.beacon).Distinct().Count();
 int result = goal.Count() - beaconsInRange;

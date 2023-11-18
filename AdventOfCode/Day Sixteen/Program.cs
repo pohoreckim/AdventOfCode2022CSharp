@@ -14,7 +14,7 @@ foreach (var line in input.Split('\n').SkipLast(1))
     vertexList.Add((tokens[1], int.Parse(tokens[5].TrimEnd(';')), neighbours));
 }
 
-List<(string, int, List<(string, int)>)> compressVertices(List<(string name, int rate, List<string> neighbours)> vertexList, string startVertex)
+List<(string, int, List<(string, int)>)> CompressVertices(List<(string name, int rate, List<string> neighbours)> vertexList, string startVertex)
 {
     List<(string name, int rate, List<(string, int)> neighbours)> compactVerList = new List<(string, int, List<(string, int)>)>();
     foreach (var vertex in vertexList)
@@ -52,7 +52,7 @@ List<(string, int, List<(string, int)>)> compressVertices(List<(string name, int
 // Part One
 
 string startVertex = "AA";
-List<(string name, int rate, List<(string, int)> neighbours)> compactVerList = compressVertices(vertexList, startVertex);
+List<(string name, int rate, List<(string, int)> neighbours)> compactVerList = CompressVertices(vertexList, startVertex);
 DecisionTree tree = new DecisionTree(compactVerList, startVertex, 30);
 int result = tree.BestLeafValue;
 Console.WriteLine($"Part One answer: {result}");
@@ -74,7 +74,7 @@ DecisionTree myTree = new DecisionTree(compactVerList, startVertex, 26);
 int bestSolo = myTree.BestLeafValue;
 
 var remainingVertList = RemoveVertices(myTree.BestPath);
-var remainingVertices = compressVertices(remainingVertList, startVertex);
+var remainingVertices = CompressVertices(remainingVertList, startVertex);
 
 DecisionTree remainingTree = new DecisionTree(remainingVertices, startVertex, 26);
 int remainingFlow = remainingTree.BestLeafValue;
@@ -106,7 +106,7 @@ result = 0;
 foreach (var p in paths)
 {
     remainingVertList = RemoveVertices(p.path);
-    remainingVertices = compressVertices(remainingVertList, startVertex);
+    remainingVertices = CompressVertices(remainingVertList, startVertex);
 
     var elephantTree = new DecisionTree(remainingVertices, startVertex, 26);
     int sum = p.value + elephantTree.BestLeafValue;
