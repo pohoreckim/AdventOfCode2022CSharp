@@ -28,6 +28,11 @@ namespace Day_Seventeen
             _hotGasJets = s.ToCharArray();
         }
         public void Dispose() { }
+        public char GetNext()
+        {
+            MoveNext();
+            return Current;
+        }
         public bool MoveNext()
         {
             position = (position + 1) % _hotGasJets.Length;

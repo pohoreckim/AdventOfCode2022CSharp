@@ -23,7 +23,11 @@ namespace Day_Seventeen
             position = (position + 1) % _stoneShapes.Count;
             return true;
         }
-
+        public Stone GetNext()
+        {
+            MoveNext();
+            return Current;
+        }
         public void Reset()
         {
             position = -1;

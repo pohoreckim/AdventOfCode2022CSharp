@@ -15,7 +15,7 @@ namespace Day_Seventeen
         private ulong _levelsPruned;
         private int _heightBuffor;
         private (int, int) SpawnPoint { get {  return (2, _pileHeight + 3); } }
-
+        public List<char[]> Cave { get => _chamber; }
         public Chamber(int chamberWidth, int heightBuffor)
         {
             _chamberWidth = chamberWidth;
@@ -32,33 +32,37 @@ namespace Day_Seventeen
                 _chamber.Add(Enumerable.Repeat(Globals.air, _chamberWidth).ToArray());
             }
         }
-        public void Simulation(StonesEnumerator stones, HotGasEnumerator hotGas, ulong stonesCount, bool prune=true) 
+        private bool StoneSimulation(Stone stone, char gasJet)
         {
+            (int x, int y)[] directions = new (int x, int y)[] { gasJet == '<' ? (-1, 0) : (1, 0), (0, -1) };
+            bool result = false;
+            for (int i = 0; i < directions.Length; i++)
+            {
+                result = CanMove(stone, directions[i]);
+                if(result) stone.Move(directions[i]);
+            }
+            return result;
+        }
+        public List<(int hDiff, int stone, int gas)> Simulation(StonesEnumerator stones, HotGasEnumerator hotGas, ulong stonesCount, bool prune = true)
+        {
+            List<(int h, int s, int g)> result = new List<(int h, int s, int g)>();
             for (ulong i = 0; i < stonesCount; i++)
             {
-                stones.MoveNext();
-                hotGas.MoveNext();
-                Stone currentStone = stones.Current;
+                Stone currentStone = stones.GetNext();
+                char gasJet = hotGas.GetNext();
                 currentStone.Move(SpawnPoint);
-                while (true)
+                while (StoneSimulation(currentStone, gasJet))
                 {
-                    (int x, int y) direction = hotGas.Current == '<' ? (-1, 0) : (1, 0);
-                    if (CanMove(currentStone, direction))
-                    {
-                        currentStone.Move(direction);
-                    }
-                    direction = (0, -1);
-                    if (CanMove(currentStone, direction))
-                    {
-                        currentStone.Move(direction);
-                        hotGas.MoveNext();
-                    }
-                    else break;
+                    gasJet = hotGas.GetNext();
                 }
                 AddStone(currentStone);
+                int prevHeight = _pileHeight;
                 _pileHeight = Math.Max(currentStone.Y + currentStone.Height, _pileHeight);
+                result.Add((_pileHeight - prevHeight, stones.Position, hotGas.Position));
+                // Calculate space to be added above highest rock.
                 int spaceNeed = _heightBuffor - (_chamber.Count - _pileHeight);
                 if (spaceNeed > 0) AddSpace(spaceNeed);
+                // Check if new fully filled level is created and prune chamber if so.
                 if (prune)
                 {
                     int pruneLevel = GetFullLevel(currentStone);
@@ -68,6 +72,7 @@ namespace Day_Seventeen
                     }
                 }
             }
+            return result;
         }
         private bool CheckLevel(int level)
         {
