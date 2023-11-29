@@ -71,11 +71,7 @@ List<(string, int, List<string>)> RemoveVertices(List<string> path)
 }
 
 DecisionTree myTree = new DecisionTree(compactVerList, startVertex, 26);
-int bestSolo = myTree.BestLeafValue;
-
-var remainingVertList = RemoveVertices(myTree.BestPath);
-var remainingVertices = CompressVertices(remainingVertList, startVertex);
-
+var remainingVertices = CompressVertices(RemoveVertices(myTree.BestPath), startVertex);
 DecisionTree remainingTree = new DecisionTree(remainingVertices, startVertex, 26);
 int remainingFlow = remainingTree.BestLeafValue;
 
@@ -105,9 +101,7 @@ DFS(remainingFlow, myTree.Root!, 0, new List<string>(), ref paths);
 result = 0;
 foreach (var p in paths)
 {
-    remainingVertList = RemoveVertices(p.path);
-    remainingVertices = CompressVertices(remainingVertList, startVertex);
-
+    remainingVertices = CompressVertices(RemoveVertices(p.path), startVertex);
     var elephantTree = new DecisionTree(remainingVertices, startVertex, 26);
     int sum = p.value + elephantTree.BestLeafValue;
     result = sum > result ? sum : result;
