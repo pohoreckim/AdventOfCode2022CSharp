@@ -1,4 +1,5 @@
 ﻿using Day_Eighteen;
+using System.Threading.Channels;
 using Utils;
 
 // Task input
@@ -10,7 +11,6 @@ var lines = input.Split('\n').SkipLast(1);
 List<Face> RemoveDuplicates(List<Cube> cubes)
 {
     List<Face> faces = new List<Face>();
-    HashSet<Face> duplicates = new HashSet<Face>();
     foreach (var cube in cubes)
     {
         foreach (var face in cube.Faces)
@@ -19,7 +19,7 @@ List<Face> RemoveDuplicates(List<Cube> cubes)
             if (index > -1)
             {
                 faces.RemoveAt(index);
-                duplicates.Add(face);
+
             }
             else
             {
@@ -30,78 +30,70 @@ List<Face> RemoveDuplicates(List<Cube> cubes)
     return faces;
 }
 
-List<Point3D> cubesMiddle = new List<Point3D>();
+List<Cube> cubes = new List<Cube>();
 foreach (var line in lines)
 {
     var tokens = line.Split(',').Select(x => int.Parse(x)).ToArray();
-    cubesMiddle.Add(new Point3D(tokens[0] + 0.5, tokens[1] + 0.5, tokens[2] + 0.5));
+    cubes.Add(new Cube(new Point3D(tokens[0] + 0.5, tokens[1] + 0.5, tokens[2] + 0.5), true));
 }
-List<Face> blockFaces = RemoveDuplicates(cubesMiddle.Select(x => new Cube(x, true)).ToList());
-
+List<Face> blockFaces = RemoveDuplicates(cubes);
 
 int result = blockFaces.Count;
 Console.WriteLine($"Part One answer: {result}");
 
 // Part Two
 
-List<Cube> cubes = new List<Cube>();
+List<Side> sides = new List<Side>();
 foreach (var face in blockFaces)
 {
-    Point3D middle = face.Middle + 0.5 * face.NormalVector;
-    int index = cubes.FindIndex(x => x.Middle == middle);
-    Face oppositeFace = new Face(face.Middle, -face.NormalVector);
-    if (index > -1)
+    Side side = new Side(face);
+    for (int i = 0; i < sides.Count; i++)
     {
-        cubes[index].AddFace(oppositeFace);
-    }
-    else
-    {
-        var cube = new Cube(middle, false);
-        cube.AddFace(oppositeFace);
-        cubes.Add(cube);
-    }
-}
-
-int check1 = cubes.Select(x => x.Faces.Count).Sum();
-
-List<Figure> figures = new List<Figure>();
-foreach (var cube in cubes)
-{
-    bool ifAdded = false;
-    foreach (var figure in figures)
-    {
-        if(figure.AddCube(cube))
+        if (Face.Dist(sides[i].Face, side.Face) == 1.0 && Point3D.DotProduct(sides[i].Face.NormalVector, side.Face.NormalVector) != -1.0)
         {
-            ifAdded = true;
+            sides[i].AddNeighbour(side);
+            side.AddNeighbour(sides[i]);
         }
     }
-    if (!ifAdded)
-    {
-        figures.Add(new Figure(cube));
-    }
+    sides.Add(side);
 }
 
-for (int i = figures.Count - 2; i > 0; i--)
+sides.ForEach(x => x.CleanUp());
+
+List<Side> FloodFill(Side startSide)
 {
-    for (int j = figures.Count - 1; j > i; j--)
+    List<Side> open = new List<Side>();
+    List<Side> closed = new List<Side>();
+    open.Add(startSide);
+    while(open.Count > 0)
     {
-        if (Figure.CanMerge(figures[i], figures[j]))
-        {
-            figures[i] = Figure.Merge(figures[i], figures[j]);
-            figures.RemoveAt(j);
+        Side current = open[0];
+        closed.Add(current);
+        open.RemoveAt(0);
+        foreach (var neighbour in current.Neighbours) 
+        { 
+            if(!closed.Any(x => x.Face == neighbour.Face) && !open.Any(x => x.Face == neighbour.Face))
+            {
+                open.Add(neighbour);
+            }
         }
     }
+    return closed;
 }
 
-for (int i = figures.Count - 1; i >= 0; i--)
+result = 0;
+while(sides.Count > 0)
 {
-    var allFaces = RemoveDuplicates(figures[i].Cubes.Select(x => new Cube(x.Middle, true)).ToList());
-    if(allFaces.Count != figures[i].FacesCount)
+    List<Side> connected = FloodFill(sides[0]);
+    if(connected.Count > result)
     {
-        figures.RemoveAt(i);
+        result = connected.Count;
+    }
+    foreach (var side in connected)
+    {
+        sides.Remove(side);
     }
 }
 
 
-result = result - figures.Select(x => x.FacesCount).Sum();
 Console.WriteLine($"Part One answer: {result}");

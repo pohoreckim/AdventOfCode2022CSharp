@@ -26,15 +26,6 @@ namespace Day_Eighteen
         {
             return Math.Abs(c1.Middle.X - c2.Middle.X) + Math.Abs(c1.Middle.Y - c2.Middle.Y) + Math.Abs(c1.Middle.Z - c2.Middle.Z);
         }
-
-        public override bool Equals(object? obj)
-        {
-            return obj is Cube cube &&
-                   EqualityComparer<Point3D>.Default.Equals(Middle, cube.Middle) &&
-                   EqualityComparer<List<Face>>.Default.Equals(Faces, cube.Faces);
-        }
-        public static bool operator ==(Cube c1, Cube c2) => c1.Equals(c2);
-        public static bool operator !=(Cube c1, Cube c2) => !(c1 == c2);
         public static List<Face> GetAllFaces(Point3D middle)
         {
             List<Face> faces = new List<Face>();

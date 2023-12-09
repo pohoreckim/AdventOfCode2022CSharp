@@ -15,5 +15,11 @@ namespace Day_Eighteen
             Middle = middle;
             NormalVector = normalVector;
         }
+        public static bool operator ==(Face left, Face right) => left.Middle == right.Middle && left.NormalVector == right.NormalVector;
+        public static bool operator !=(Face left, Face right) => !(left == right);
+        public static double Dist(Face f1, Face f2)
+        {
+            return Point3D.Dist(f1.Middle, f2.Middle);
+        }
     }
 }
